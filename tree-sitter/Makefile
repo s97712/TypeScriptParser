@@ -3,22 +3,22 @@
 #	Tree-Sitter Base and Common Language Parsers
 #
 
-CFLAGS=/nologo /FC /Od /Z7 /Gy /diagnostics:column /Itree-sitter/lib/include
-LFLAGS=/def:$(@B).def /incremental:no /debug
+CFLAGS=-g -O0 -fPIC -Itree-sitter/lib/include
+LFLAGS=-shared
 
-BIN=..\bin\debug\net7.0
+BIN=dist
 
 DLLS=\
-	$(BIN)/tree-sitter.dll \
-	$(BIN)/tree-sitter-cpp.dll \
+	$(BIN)/libtree-sitter.dll \
+	$(BIN)/libtree-sitter-typescript.dll \
 
 all: dirs $(DLLS)
 
 dirs:
-	@if not exist tree-sitter\lib\src\alloc.c echo.
-	@if not exist tree-sitter\lib\src\alloc.c echo *** Error: Missing tree-sitter sources.  Did you use --recursive with git clone?
-	@if not exist tree-sitter\lib\src\alloc.c echo.
-	@if not exist $(BIN)\nul mkdir $(BIN)
+	@if [ ! -f tree-sitter/lib/src/alloc.c ]; then echo ""; fi
+	@if [ ! -f tree-sitter/lib/src/alloc.c ]; then echo "*** Error: Missing tree-sitter sources.  Did you use --recursive with git clone?"; fi
+	@if [ ! -f tree-sitter/lib/src/alloc.c ]; then echo ""; fi
+	@if [ ! -d $(BIN) ]; then mkdir -p $(BIN); fi
 
 ########
 #
@@ -37,39 +37,39 @@ $(BIN)/tree-sitter.obj: \
 		tree-sitter/lib/src/subtree.c \
 		tree-sitter/lib/src/tree.c \
 		tree-sitter/lib/src/tree_cursor.c
-	cl $(CFLAGS) /Fo:$@ \
-		/Itree-sitter/lib/src /Itree-sitter/lib/src/unicode \
-		/c tree-sitter/lib/src/lib.c
+	gcc $(CFLAGS) -o $@ \
+		-Itree-sitter/lib/src -Itree-sitter/lib/src/unicode \
+		-c tree-sitter/lib/src/lib.c
 
-$(BIN)/tree-sitter.dll: $(BIN)/tree-sitter.obj
-	cl /LD $(CFLAGS) /Fe:$@ $** /link $(LFLAGS)
+$(BIN)/libtree-sitter.dll: $(BIN)/tree-sitter.obj
+	gcc $(LFLAGS) $(CFLAGS) -o $@ $^
 
 
 ########
 #
-#   C++
+#   TypeScript
 #
-$(BIN)/tree-sitter-cpp-parser.obj: tree-sitter-cpp/src/parser.c
-	cl $(CFLAGS) /Fo:$@ /Itree-sitter-cpp/src/include /c $**
+$(BIN)/tree-sitter-typescript-parser.obj: tree-sitter-typescript/typescript/src/parser.c
+	gcc $(CFLAGS) -o $@ -Itree-sitter-typescript/typescript/src -c $^
 
-$(BIN)/tree-sitter-cpp-scanner.obj: tree-sitter-cpp/src/scanner.c
-	cl $(CFLAGS) /Fo:$@ /Itree-sitter-cpp/src/include /c $**
+$(BIN)/tree-sitter-typescript-scanner.obj: tree-sitter-typescript/typescript/src/scanner.c
+	gcc $(CFLAGS) -o $@ -Itree-sitter-typescript/typescript/src -c $^
 
-$(BIN)/tree-sitter-cpp.dll: $(BIN)/tree-sitter-cpp-parser.obj $(BIN)/tree-sitter-cpp-scanner.obj
-	cl /LD $(CFLAGS) /Fe:$@ $** /link $(LFLAGS)
+$(BIN)/libtree-sitter-typescript.dll: $(BIN)/tree-sitter-typescript-parser.obj $(BIN)/tree-sitter-typescript-scanner.obj
+	gcc $(LFLAGS) $(CFLAGS) -o $@ $^
 
 ########
 #
 #	Clean
 #
 clean:
-	-del *.obj $(BIN)\*.obj 2>nul
-	-del $(BIN)\tree-sitter*.dll $(BIN)\tree-sitter*.exp $(BIN)\tree-sitter*.lib $(BIN)\tree-sitter*.pdb 2>nul
-	-del tree-sitter*.dll tree-sitter*.exp tree-sitter*.lib tree-sitter*.pdb 2>nul
-	-del $(BIN)\xred.* $(BIN)\test.exe $(BIN)\test.exp $(BIN)\test.pdb $(BIN)\test.lib 2>nul
-	-del *~ 2>nul
-	@-echo.
-	@-echo.
+	-rm -f *.obj $(BIN)/*.obj 2>/dev/null
+	-rm -f $(BIN)/libtree-sitter*.dll $(BIN)/tree-sitter*.exp $(BIN)/tree-sitter*.lib $(BIN)/tree-sitter*.pdb 2>/dev/null
+	-rm -f libtree-sitter*.dll tree-sitter*.exp tree-sitter*.lib tree-sitter*.pdb 2>/dev/null
+	-rm -f $(BIN)/xred.* $(BIN)/test $(BIN)/test.exp $(BIN)/test.pdb $(BIN)/test.lib 2>/dev/null
+	-rm -f *~ 2>/dev/null
+	@echo
+	@echo
 
 ########
 #
