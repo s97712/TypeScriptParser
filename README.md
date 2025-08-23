@@ -25,6 +25,36 @@ dotnet test --configuration Release --no-build
 dotnet pack -c Release --no-build -o ./artifacts
 ```
 
+## 自动化构建
+
+### 开发流程
+1. 创建功能分支
+2. 提交Pull Request → 自动构建测试
+3. 合并到main分支
+
+### 发布流程
+1. 创建版本标签：`git tag v1.2.0 && git push origin v1.2.0`
+2. 自动构建测试发布到NuGet.org
+3. 版本号格式：`1.2.0.{构建号}`
+
+## 手动构建
+
+```bash
+# 1. 构建native库
+(cd tree-sitter/ && make clean && make)
+
+# 2. 复制运行时文件
+RID=$(dotnet --info | grep "RID:" | awk '{print $2}')
+mkdir -p TypeScriptParser.Native/runtimes/$RID/native
+cp -r tree-sitter/dist/* TypeScriptParser.Native/runtimes/$RID/native/
+
+# 3. .NET构建
+dotnet restore
+dotnet build -c Release
+dotnet test --configuration Release --no-build
+dotnet pack -c Release --no-build -o ./artifacts
+```
+
 ## 开发构建
 
 ```bash

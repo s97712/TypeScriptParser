@@ -1,0 +1,115 @@
+name: CI/CD
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    tags: [ 'v*' ]
+
+jobs:
+  build-native:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            rid: linux-x64
+          - os: macos-latest  
+            rid: osx-arm64
+          - os: windows-latest
+            rid: win-x64
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        
+    - name: Build Native Libraries
+      run: |
+        cd tree-sitter
+        make clean && make
+      shell: bash
+        
+    - name: Copy Native Files
+      run: |
+        mkdir -p TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native
+        cp -r tree-sitter/dist/* TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
+      shell: bash
+        
+    - name: Upload Native Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: native-${{ matrix.rid }}
+        path: TypeScriptParser.Native/runtimes/${{ matrix.rid }}/
+        retention-days: 1
+
+  build-and-test:
+    needs: build-native
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Download Native Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        pattern: native-*
+        path: TypeScriptParser.Native/runtimes/
+        merge-multiple: true
+        
+    - name: Set Version
+      run: |
+        if [[ $GITHUB_REF == refs/tags/v* ]]; then
+          TAG=${GITHUB_REF#refs/tags/v}
+          VERSION="${TAG}.${{ github.run_number }}"
+        else
+          VERSION="1.0.0-pr${{ github.event.number }}.${{ github.run_number }}"
+        fi
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        
+    - name: Restore
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build -c Release -p:Version=$VERSION --no-restore
+      
+    - name: Test
+      run: dotnet test -c Release --no-build
+      
+    - name: Pack
+      run: dotnet pack -c Release -p:Version=$VERSION --no-build -o ./artifacts
+      
+    - name: Upload Packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-packages
+        path: artifacts/*.nupkg
+
+  publish:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Download Packages
+      uses: actions/download-artifact@v4
+      with:
+        name: nuget-packages
+        path: artifacts/
+        
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Publish to NuGet
+      run: |
+        dotnet nuget push artifacts/*.nupkg \
+          --api-key ${{ secrets.NUGET_API_KEY }} \
+          --source https://api.nuget.org/v3/index.json \
+          --skip-duplicate
