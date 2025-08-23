@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeScriptParser", "TypeScriptParser\TypeScriptParser.csproj", "{E4A6CA24-7654-5B3C-7049-EF0045FEE6BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeScriptParser.Tests", "TypeScriptParser.Tests\TypeScriptParser.Tests.csproj", "{7DA70DA9-2885-4377-A2C8-F38A635AE7D7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E4A6CA24-7654-5B3C-7049-EF0045FEE6BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4A6CA24-7654-5B3C-7049-EF0045FEE6BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4A6CA24-7654-5B3C-7049-EF0045FEE6BF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E4A6CA24-7654-5B3C-7049-EF0045FEE6BF}.Debug|x64.Build.0 = Debug|Any CPU
+		{E4A6CA24-7654-5B3C-7049-EF0045FEE6BF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E4A6CA24-7654-5B3C-7049-EF0045FEE6BF}.Debug|x86.Build.0 = Debug|Any CPU
+		{E4A6CA24-7654-5B3C-7049-EF0045FEE6BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4A6CA24-7654-5B3C-7049-EF0045FEE6BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4A6CA24-7654-5B3C-7049-EF0045FEE6BF}.Release|x64.ActiveCfg = Release|Any CPU
+		{E4A6CA24-7654-5B3C-7049-EF0045FEE6BF}.Release|x64.Build.0 = Release|Any CPU
+		{E4A6CA24-7654-5B3C-7049-EF0045FEE6BF}.Release|x86.ActiveCfg = Release|Any CPU
+		{E4A6CA24-7654-5B3C-7049-EF0045FEE6BF}.Release|x86.Build.0 = Release|Any CPU
+		{7DA70DA9-2885-4377-A2C8-F38A635AE7D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DA70DA9-2885-4377-A2C8-F38A635AE7D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DA70DA9-2885-4377-A2C8-F38A635AE7D7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7DA70DA9-2885-4377-A2C8-F38A635AE7D7}.Debug|x64.Build.0 = Debug|Any CPU
+		{7DA70DA9-2885-4377-A2C8-F38A635AE7D7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7DA70DA9-2885-4377-A2C8-F38A635AE7D7}.Debug|x86.Build.0 = Debug|Any CPU
+		{7DA70DA9-2885-4377-A2C8-F38A635AE7D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DA70DA9-2885-4377-A2C8-F38A635AE7D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DA70DA9-2885-4377-A2C8-F38A635AE7D7}.Release|x64.ActiveCfg = Release|Any CPU
+		{7DA70DA9-2885-4377-A2C8-F38A635AE7D7}.Release|x64.Build.0 = Release|Any CPU
+		{7DA70DA9-2885-4377-A2C8-F38A635AE7D7}.Release|x86.ActiveCfg = Release|Any CPU
+		{7DA70DA9-2885-4377-A2C8-F38A635AE7D7}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {14634845-429E-4CB8-A6C2-B7873DCFE646}
+	EndGlobalSection
+EndGlobal

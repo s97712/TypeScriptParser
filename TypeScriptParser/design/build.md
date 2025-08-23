@@ -14,7 +14,7 @@
 - **影响**：适配Windows/.NET环境的动态库格式要求
 
 ### 4. 集成C#构建流程
-- **添加**：在`csharp-tree-sitter.csproj`中增加构建后任务`CopyNativeLibraries`
+- **添加**：在`TypeScriptParser.csproj`中增加构建后任务`CopyNativeLibraries`
 - **功能**：自动将`tree-sitter/dist`中的dll文件复制到C#项目输出目录
 - **优化**：支持增量复制，跳过未更改文件
 
