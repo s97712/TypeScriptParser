@@ -39,7 +39,7 @@ jobs:
         cp tree-sitter/dist/* TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
         
     - name: Upload Native Libraries
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: native-${{ matrix.rid }}
         path: TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
@@ -64,8 +64,9 @@ jobs:
         echo "version=${TAG}" >> $GITHUB_OUTPUT
         
     - name: Download Native Libraries
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
+        pattern: native-*
         path: TypeScriptParser.Native/runtimes/
         
     - name: Cache NuGet packages
@@ -90,7 +91,7 @@ jobs:
         dotnet test TypeScriptParser.TestPackage --configuration Release --logger trx --results-directory TestResults/
         
     - name: Upload Test Results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: release-test-results
@@ -103,12 +104,10 @@ jobs:
         dotnet nuget push ./artifacts/*.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
         
     - name: Create GitHub Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v2
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ steps.version.outputs.version }}
+        tag_name: ${{ github.ref_name }}
+        name: Release ${{ steps.version.outputs.version }}
         body: |
           ## TypeScript Parser v${{ steps.version.outputs.version }}
           
