@@ -118,3 +118,52 @@ jobs:
           --api-key ${{ secrets.NUGET_API_KEY }} \
           --source https://api.nuget.org/v3/index.json \
           --skip-duplicate
+
+  package-test:
+    needs: pack-and-publish
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            rid: linux-x64
+          - os: macos-latest
+            rid: osx-arm64
+          - os: windows-latest
+            rid: win-x64
+    
+    steps:
+    - uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Download NuGet Packages
+      uses: actions/download-artifact@v4
+      with:
+        name: nuget-packages
+        path: ./artifacts
+        
+    - name: Set Version
+      run: |
+        if [[ $GITHUB_REF == refs/tags/v* ]]; then
+          TAG=${GITHUB_REF#refs/tags/v}
+          VERSION="${TAG}.${{ github.run_number }}"
+        else
+          VERSION="1.0.0-pr${{ github.event.number }}.${{ github.run_number }}"
+        fi
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+      shell: bash
+      
+    - name: Update Package Reference
+      run: |
+        cd TypeScriptParser.TestPackage
+        dotnet remove package TypeScriptParser
+        dotnet add package TypeScriptParser --version $VERSION --source local
+      shell: bash
+      
+    - name: Test Package
+      run: dotnet test TypeScriptParser.TestPackage/ -c Release
+      shell: bash

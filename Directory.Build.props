@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <!-- 版本管理 -->
-    <Version Condition="'$(Version)' == ''">1.0.0-dev</Version>
+    <Version Condition="'$(Version)' == ''">0.0.1-dev</Version>
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <FileVersion>1.0.0</FileVersion>
     
