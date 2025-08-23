@@ -34,13 +34,15 @@ jobs:
       run: |
         mkdir -p TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native
         cp -r tree-sitter/dist/* TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
+        echo "Files copied for ${{ matrix.rid }}:"
+        ls -la TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
       shell: bash
         
     - name: Upload Native Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: native-${{ matrix.rid }}
-        path: TypeScriptParser.Native/runtimes/${{ matrix.rid }}/
+        path: TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
         retention-days: 1
 
   build-and-test:
