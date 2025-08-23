@@ -80,6 +80,14 @@ jobs:
     - name: Build
       run: dotnet build -c Release -p:Version=$VERSION --no-restore
       
+    - name: Debug Runtime Files Before Test
+      run: |
+        echo "=== Runtime files structure ==="
+        find ./TypeScriptParser.Native/runtimes/ -type f
+        
+        echo "=== Test output directory before testing ==="
+        ls -la TypeScriptParser.Tests/bin/Release/net9.0/ || echo "Test output directory not found"
+      
     - name: Test
       run: dotnet test -c Release --no-build
       
