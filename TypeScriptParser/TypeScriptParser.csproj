@@ -10,9 +10,9 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
-  <!-- Native库依赖 -->
+  <!-- Native库项目引用 -->
   <ItemGroup>
-    <PackageReference Include="TypeScriptParser.Native" Version="$(Version)" />
+    <ProjectReference Include="../TypeScriptParser.Native/TypeScriptParser.Native.csproj" />
   </ItemGroup>
 
 </Project>
