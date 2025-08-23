@@ -35,6 +35,7 @@ jobs:
         mkdir -p TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native
         cp -r tree-sitter/dist/* TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
         echo "Files copied for ${{ matrix.rid }}:"
+        echo TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
         ls -la TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
       shell: bash
         
