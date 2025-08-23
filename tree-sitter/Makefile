@@ -8,11 +8,26 @@ LFLAGS=-shared
 
 BIN=dist
 
-DLLS=\
-	$(BIN)/libtree-sitter.dll \
-	$(BIN)/libtree-sitter-typescript.dll \
+# Detect platform and set library extension
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+    LIB_EXT=.so
+endif
+ifeq ($(UNAME_S),Darwin)
+    LIB_EXT=.dylib
+endif
+ifeq ($(OS),Windows_NT)
+    LIB_EXT=.dll
+endif
+ifndef LIB_EXT
+    LIB_EXT=.so
+endif
 
-all: dirs $(DLLS)
+LIBS=\
+	$(BIN)/libtree-sitter$(LIB_EXT) \
+	$(BIN)/libtree-sitter-typescript$(LIB_EXT) \
+
+all: dirs $(LIBS)
 
 dirs:
 	@if [ ! -f tree-sitter/lib/src/alloc.c ]; then echo ""; fi
@@ -41,7 +56,7 @@ $(BIN)/tree-sitter.obj: \
 		-Itree-sitter/lib/src -Itree-sitter/lib/src/unicode \
 		-c tree-sitter/lib/src/lib.c
 
-$(BIN)/libtree-sitter.dll: $(BIN)/tree-sitter.obj
+$(BIN)/libtree-sitter$(LIB_EXT): $(BIN)/tree-sitter.obj
 	gcc $(LFLAGS) $(CFLAGS) -o $@ $^
 
 
@@ -55,7 +70,7 @@ $(BIN)/tree-sitter-typescript-parser.obj: tree-sitter-typescript/typescript/src/
 $(BIN)/tree-sitter-typescript-scanner.obj: tree-sitter-typescript/typescript/src/scanner.c
 	gcc $(CFLAGS) -o $@ -Itree-sitter-typescript/typescript/src -c $^
 
-$(BIN)/libtree-sitter-typescript.dll: $(BIN)/tree-sitter-typescript-parser.obj $(BIN)/tree-sitter-typescript-scanner.obj
+$(BIN)/libtree-sitter-typescript$(LIB_EXT): $(BIN)/tree-sitter-typescript-parser.obj $(BIN)/tree-sitter-typescript-scanner.obj
 	gcc $(LFLAGS) $(CFLAGS) -o $@ $^
 
 ########
@@ -64,8 +79,10 @@ $(BIN)/libtree-sitter-typescript.dll: $(BIN)/tree-sitter-typescript-parser.obj $
 #
 clean:
 	-rm -f *.obj $(BIN)/*.obj 2>/dev/null
-	-rm -f $(BIN)/libtree-sitter*.dll $(BIN)/tree-sitter*.exp $(BIN)/tree-sitter*.lib $(BIN)/tree-sitter*.pdb 2>/dev/null
-	-rm -f libtree-sitter*.dll tree-sitter*.exp tree-sitter*.lib tree-sitter*.pdb 2>/dev/null
+	-rm -f $(BIN)/libtree-sitter*.dll $(BIN)/libtree-sitter*.so $(BIN)/libtree-sitter*.dylib 2>/dev/null
+	-rm -f $(BIN)/tree-sitter*.exp $(BIN)/tree-sitter*.lib $(BIN)/tree-sitter*.pdb 2>/dev/null
+	-rm -f libtree-sitter*.dll libtree-sitter*.so libtree-sitter*.dylib 2>/dev/null
+	-rm -f tree-sitter*.exp tree-sitter*.lib tree-sitter*.pdb 2>/dev/null
 	-rm -f $(BIN)/xred.* $(BIN)/test $(BIN)/test.exp $(BIN)/test.pdb $(BIN)/test.lib 2>/dev/null
 	-rm -f *~ 2>/dev/null
 	@echo

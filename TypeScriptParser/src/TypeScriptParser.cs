@@ -13,7 +13,7 @@ namespace TreeSitter.TypeScript
         private TSParser parser;
         private bool disposed = false;
 
-        [DllImport("tree-sitter-typescript.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("tree-sitter-typescript", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr tree_sitter_typescript();
 
         public TypeScriptParser()

@@ -1,0 +1,4 @@
+<Project>
+  <!-- 导入主要的targets文件 -->
+  <Import Project="../build/TypeScriptParser.Native.targets" />
+</Project>

@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    
+    <!-- NuGet包信息 -->
+    <PackageId>TypeScriptParser.Native</PackageId>
+    <Version>$(TypeScriptParserNativeVersion)</Version>
+    <Product>TypeScriptParser Native Libraries</Product>
+    <Description>TypeScriptParser的跨平台Native库文件包，包含Tree-sitter核心库和TypeScript语法库</Description>
+    <PackageTags>tree-sitter;typescript;parser;native;cross-platform</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/your-org/csharp-tree-sitter</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/your-org/csharp-tree-sitter</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    
+    <!-- NuGet包配置 -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    
+    <!-- 禁用不必要的警告 -->
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+  </PropertyGroup>
+
+  <!-- 包含README文件 -->
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" Condition="Exists('README.md')" />
+  </ItemGroup>
+
+  <!-- 包含所有runtime文件到NuGet包 -->
+  <ItemGroup>
+    <Content Include="runtimes/**/*" Pack="true" PackagePath="runtimes/" />
+  </ItemGroup>
+
+  <!-- 包含MSBuild集成文件 -->
+  <ItemGroup>
+    <Content Include="build/**/*" Pack="true" PackagePath="build/" />
+    <Content Include="buildTransitive/**/*" Pack="true" PackagePath="buildTransitive/" />
+  </ItemGroup>
+
+</Project>

@@ -23,12 +23,6 @@
     <ProjectReference Include="..\TypeScriptParser\TypeScriptParser.csproj" />
   </ItemGroup>
 
-  <Target Name="CopyNativeLibraries" AfterTargets="Build">
-    <ItemGroup>
-      <NativeLibraries Include="../tree-sitter/dist/*.dll" />
-    </ItemGroup>
-    <Copy SourceFiles="@(NativeLibraries)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
-    <Message Text="Copied native libraries from tree-sitter/dist to $(OutputPath)" Importance="high" />
-  </Target>
+  <!-- Native libraries now managed automatically via NuGet packages -->
 
 </Project>

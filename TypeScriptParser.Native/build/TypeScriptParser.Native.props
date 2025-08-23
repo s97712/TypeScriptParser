@@ -1,0 +1,34 @@
+<Project>
+
+  <PropertyGroup>
+    <!-- TypeScriptParser Native库的基础属性 -->
+    <TypeScriptParserNativeLibraryPath Condition="'$(TypeScriptParserNativeLibraryPath)' == ''">$(MSBuildThisFileDirectory)../runtimes/</TypeScriptParserNativeLibraryPath>
+    <TypeScriptParserEnableRuntimeCopy Condition="'$(TypeScriptParserEnableRuntimeCopy)' == ''">true</TypeScriptParserEnableRuntimeCopy>
+    
+    <!-- 禁用自动复制的环境变量检查 -->
+    <TypeScriptParserEnableRuntimeCopy Condition="'$(TYPESCRIPTPARSER_DISABLE_AUTO_COPY)' == '1'">false</TypeScriptParserEnableRuntimeCopy>
+    
+    <!-- 自定义native库路径的环境变量支持 -->
+    <TypeScriptParserNativeLibraryPath Condition="'$(TYPESCRIPTPARSER_NATIVE_PATH)' != ''">$(TYPESCRIPTPARSER_NATIVE_PATH)</TypeScriptParserNativeLibraryPath>
+    
+    <!-- Runtime Identifier检测 -->
+    <TypeScriptParserRuntimeIdentifier Condition="'$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</TypeScriptParserRuntimeIdentifier>
+    <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND '$(PlatformTarget)' == 'x64' AND $([MSBuild]::IsOSPlatform('Windows'))">win-x64</TypeScriptParserRuntimeIdentifier>
+    <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND '$(PlatformTarget)' == 'x86' AND $([MSBuild]::IsOSPlatform('Windows'))">win-x86</TypeScriptParserRuntimeIdentifier>
+    <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('Linux'))">linux-x64</TypeScriptParserRuntimeIdentifier>
+    <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('OSX')) AND '$(RuntimeInformation.ProcessArchitecture)' != 'Arm64'">osx-x64</TypeScriptParserRuntimeIdentifier>
+    <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('OSX')) AND '$(RuntimeInformation.ProcessArchitecture)' == 'Arm64'">osx-arm64</TypeScriptParserRuntimeIdentifier>
+    
+    <!-- 默认回退到win-x64 -->
+    <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == ''">win-x64</TypeScriptParserRuntimeIdentifier>
+    
+    <!-- 计算native库的实际路径 -->
+    <TypeScriptParserNativePath>$(TypeScriptParserNativeLibraryPath)$(TypeScriptParserRuntimeIdentifier)/native/</TypeScriptParserNativePath>
+  </PropertyGroup>
+
+  <!-- 调试信息输出 -->
+  <PropertyGroup Condition="'$(TypeScriptParserVerbose)' == 'true'">
+    <MSBuildVerbosity>detailed</MSBuildVerbosity>
+  </PropertyGroup>
+
+</Project>
