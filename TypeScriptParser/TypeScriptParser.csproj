@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
@@ -12,7 +13,7 @@
 
   <!-- Native库依赖 -->
   <ItemGroup>
-    <PackageReference Include="TypeScriptParser.Native" Version="$(Version)" />
+    <ProjectReference Include="..\TypeScriptParser.Native\TypeScriptParser.Native.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,16 +5,23 @@
 ## 构建步骤
 
 ```bash
-# 1. 恢复依赖
+# 1. 复制运行时文件
+(cd tree-sitter/ && make clean && make)
+
+RID=$(dotnet --info | grep "RID:" | awk '{print $2}')
+mkdir -p TypeScriptParser.Native/runtimes/$RID/native
+cp -r tree-sitter/dist/* TypeScriptParser.Native/runtimes/$RID/native/
+
+# 2. 恢复依赖
 dotnet restore
 
-# 2. 构建项目
+# 3. 构建项目
 dotnet build -c Release
 
-# 3. 运行测试
+# 4. 运行测试
 dotnet test --configuration Release --no-build
 
-# 4. 打包NuGet包
+# 5. 打包NuGet包
 dotnet pack -c Release --no-build -o ./artifacts
 ```
 
