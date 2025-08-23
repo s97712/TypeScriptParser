@@ -151,9 +151,8 @@ jobs:
       
     - name: Update Package Reference
       run: |
-        cd TypeScriptParser.TestPackage
-        dotnet remove package TypeScriptParser
-        dotnet add package TypeScriptParser --version $VERSION --source local
+        dotnet remove TypeScriptParser.TestPackage/TypeScriptParser.TestPackage.csproj package TypeScriptParser
+        dotnet add TypeScriptParser.TestPackage/TypeScriptParser.TestPackage.csproj package TypeScriptParser --version $VERSION --source local
       shell: bash
       
     - name: Test Package
