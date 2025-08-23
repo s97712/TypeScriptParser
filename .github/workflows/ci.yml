@@ -42,7 +42,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: native-${{ matrix.rid }}
-        path: TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
+        path: TypeScriptParser.Native/runtimes/${{ matrix.rid }}/
         retention-days: 1
 
   build-and-test:
