@@ -35,9 +35,30 @@ jobs:
         mkdir -p TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native
         cp -r tree-sitter/dist/* TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
         echo "Files copied for ${{ matrix.rid }}:"
-        echo TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
-        ls -la TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
       shell: bash
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Restore
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build -c Release --no-restore
+      
+    - name: Debug Runtime Files Before Test
+      run: |
+        echo "=== Runtime files structure ==="
+        find ./TypeScriptParser.Native/runtimes/ -type f
+        
+        echo "=== Test output directory before testing ==="
+        ls -la TypeScriptParser.Tests/bin/Release/net9.0/ || echo "Test output directory not found"
+      shell: bash
+      
+    - name: Test
+      run: dotnet test -c Release --no-build
         
     - name: Upload Native Artifacts
       uses: actions/upload-artifact@v4
@@ -46,7 +67,7 @@ jobs:
         path: TypeScriptParser.Native/runtimes/
         retention-days: 1
 
-  build-and-test:
+  pack-and-publish:
     needs: build-native
     runs-on: ubuntu-latest
     
@@ -81,17 +102,6 @@ jobs:
     - name: Build
       run: dotnet build -c Release -p:Version=$VERSION --no-restore
       
-    - name: Debug Runtime Files Before Test
-      run: |
-        echo "=== Runtime files structure ==="
-        find ./TypeScriptParser.Native/runtimes/ -type f
-        
-        echo "=== Test output directory before testing ==="
-        ls -la TypeScriptParser.Tests/bin/Release/net9.0/ || echo "Test output directory not found"
-      
-    - name: Test
-      run: dotnet test -c Release --no-build
-      
     - name: Pack
       run: dotnet pack -c Release -p:Version=$VERSION --no-build -o ./artifacts
       
@@ -100,25 +110,9 @@ jobs:
       with:
         name: nuget-packages
         path: artifacts/*.nupkg
-
-  publish:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
-    
-    steps:
-    - name: Download Packages
-      uses: actions/download-artifact@v4
-      with:
-        name: nuget-packages
-        path: artifacts/
-        
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.x'
         
     - name: Publish to NuGet
+      if: startsWith(github.ref, 'refs/tags/v')
       run: |
         dotnet nuget push artifacts/*.nupkg \
           --api-key ${{ secrets.NUGET_API_KEY }} \
