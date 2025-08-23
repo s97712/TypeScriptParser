@@ -1,0 +1,129 @@
+name: Release to NuGet
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-native:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            rid: linux-x64
+          - os: macos-latest
+            rid: osx-arm64
+          - os: windows-latest
+            rid: win-x64
+    
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        
+    - name: Setup Build Tools (Windows)
+      if: matrix.os == 'windows-latest'
+      run: choco install make
+        
+    - name: Build Native Libraries
+      working-directory: tree-sitter
+      run: make clean && make all
+        
+    - name: Copy Native Libraries
+      shell: bash
+      run: |
+        mkdir -p TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
+        cp tree-sitter/dist/* TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
+        
+    - name: Upload Native Libraries
+      uses: actions/upload-artifact@v3
+      with:
+        name: native-${{ matrix.rid }}
+        path: TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
+
+  release:
+    needs: build-native
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+    - uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Parse Version from Tag
+      id: version
+      run: |
+        TAG=${GITHUB_REF#refs/tags/v}
+        echo "version=${TAG}" >> $GITHUB_OUTPUT
+        
+    - name: Download Native Libraries
+      uses: actions/download-artifact@v3
+      with:
+        path: TypeScriptParser.Native/runtimes/
+        
+    - name: Cache NuGet packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          nuget-${{ runner.os }}-
+        
+    - name: Build .NET Projects
+      run: |
+        dotnet restore
+        dotnet build --configuration Release -p:Version=${{ steps.version.outputs.version }}
+        
+    - name: Pack NuGet Packages
+      run: |
+        dotnet pack --no-build --configuration Release --output ./artifacts -p:Version=${{ steps.version.outputs.version }}
+        
+    - name: Run Integration Tests
+      run: |
+        dotnet test TypeScriptParser.TestPackage --configuration Release --logger trx --results-directory TestResults/
+        
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: release-test-results
+        path: TestResults/
+        
+    - name: Publish to NuGet
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      run: |
+        dotnet nuget push ./artifacts/*.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
+        
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ steps.version.outputs.version }}
+        body: |
+          ## TypeScript Parser v${{ steps.version.outputs.version }}
+          
+          ### 🚀 Features
+          - 跨平台Native库自动构建
+          - .NET 9.0 支持
+          - NuGet包自动发布
+          
+          ### 📦 NuGet包
+          - [TypeScriptParser v${{ steps.version.outputs.version }}](https://www.nuget.org/packages/TypeScriptParser/${{ steps.version.outputs.version }})
+          - [TypeScriptParser.Native v${{ steps.version.outputs.version }}](https://www.nuget.org/packages/TypeScriptParser.Native/${{ steps.version.outputs.version }})
+          
+          ### 🔧 安装方式
+          ```bash
+          dotnet add package TypeScriptParser --version ${{ steps.version.outputs.version }}
+          ```
+        draft: false
+        prerelease: false

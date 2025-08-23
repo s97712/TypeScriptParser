@@ -1,0 +1,111 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-native:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            rid: linux-x64
+          - os: macos-latest
+            rid: osx-arm64  
+          - os: windows-latest
+            rid: win-x64
+    
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        
+    - name: Setup Build Tools (Windows)
+      if: matrix.os == 'windows-latest'
+      run: choco install make
+        
+    - name: Cache Native Build
+      uses: actions/cache@v3
+      with:
+        path: tree-sitter/dist
+        key: native-${{ matrix.os }}-${{ hashFiles('tree-sitter/**/*.c', 'tree-sitter/**/*.h', 'tree-sitter/Makefile') }}
+        restore-keys: |
+          native-${{ matrix.os }}-
+        
+    - name: Build Native Libraries
+      working-directory: tree-sitter
+      run: make clean && make all
+        
+    - name: Copy Native Libraries
+      shell: bash
+      run: |
+        mkdir -p TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
+        cp tree-sitter/dist/* TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
+        
+    - name: Upload Native Libraries
+      uses: actions/upload-artifact@v3
+      with:
+        name: native-${{ matrix.rid }}
+        path: TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
+
+  build-dotnet:
+    needs: build-native
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Download Native Libraries
+      uses: actions/download-artifact@v3
+      with:
+        path: TypeScriptParser.Native/runtimes/
+        
+    - name: Cache NuGet packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          nuget-${{ runner.os }}-
+        
+    - name: Generate Version
+      id: version
+      run: |
+        BASE_VERSION=$(grep '<Version>' Directory.Build.props | sed 's/.*<Version>\(.*\)<\/Version>.*/\1/')
+        BUILD_NUMBER=${{ github.run_number }}
+        VERSION="${BASE_VERSION}.${BUILD_NUMBER}"
+        echo "version=${VERSION}" >> $GITHUB_OUTPUT
+        
+    - name: Restore Dependencies
+      run: dotnet restore
+      
+    - name: Build Projects
+      run: dotnet build --no-restore --configuration Release -p:Version=${{ steps.version.outputs.version }}
+      
+    - name: Run Unit Tests
+      run: dotnet test TypeScriptParser.Tests --no-build --configuration Release --logger trx --results-directory TestResults/
+      
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results
+        path: TestResults/
+        
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-artifacts
+        path: |
+          */bin/Release/
+          */obj/Release/

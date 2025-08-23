@@ -5,25 +5,31 @@
 ## 构建步骤
 
 ```bash
-# 1. 恢复依赖
-dotnet restore
+# 1. 初始化子模块
+git submodule update --init --recursive
 
-# 2. 构建项目
+# 2. 构建Native库
+(cd tree-sitter && make clean && make all)
+
+# 3. 恢复依赖和构建
+dotnet restore
 dotnet build -c Release
 
-# 3. 运行测试
+# 4. 运行测试
 dotnet test --configuration Release --no-build
 
-# 4. 打包NuGet包
+# 5. 打包NuGet包
 dotnet pack -c Release --no-build -o ./artifacts
 ```
 
-## 开发构建
+## 🔄 自动化发布
+
+- **推送main分支** → 自动构建和测试
+- **创建tag** → 自动发布到NuGet
 
 ```bash
-# Debug模式构建和测试
-dotnet build -c Debug
-dotnet test --configuration Debug --no-build
+git tag v1.2.0
+git push origin v1.2.0
 ```
 
 ## 项目结构
