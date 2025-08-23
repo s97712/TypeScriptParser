@@ -4,42 +4,15 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <PlatformTarget>x64</PlatformTarget>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    
-    <!-- 抑制XML文档注释警告 -->
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
-    
-    <!-- NuGet包信息 -->
     <PackageId>TypeScriptParser</PackageId>
-    <Version>$(TypeScriptParserVersion)</Version>
-    <Product>TypeScriptParser</Product>
-    <Description>TypeScript语法解析器 - 基于Tree-sitter的.NET绑定，支持跨平台自动化Native库管理</Description>
+    <Description>TypeScript语法解析器 - 基于Tree-sitter的.NET绑定</Description>
     <PackageTags>tree-sitter;typescript;parser;syntax;ast</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/your-org/csharp-tree-sitter</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/your-org/csharp-tree-sitter</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    
-    <!-- NuGet包配置 -->
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
-  <!-- 包含源文件 -->
+  <!-- Native库依赖 -->
   <ItemGroup>
-    <Compile Include="src\binding.cs" />
-    <Compile Include="src\TypeScriptParser.cs" />
-  </ItemGroup>
-
-  <!-- 引用Native库包 -->
-  <ItemGroup>
-    <PackageReference Include="TypeScriptParser.Native" Version="$(TypeScriptParserNativeVersion)" />
-  </ItemGroup>
-
-  <!-- 包含README文件到NuGet包 -->
-  <ItemGroup>
-    <None Include="../README.md" Pack="true" PackagePath="\" Condition="Exists('../README.md')" />
+    <PackageReference Include="TypeScriptParser.Native" Version="$(Version)" />
   </ItemGroup>
 
 </Project>

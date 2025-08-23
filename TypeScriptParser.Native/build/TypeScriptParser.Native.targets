@@ -1,93 +1,28 @@
 <Project>
 
-  <!-- 定义native库文件项 -->
-  <ItemGroup Condition="'$(TypeScriptParserEnableRuntimeCopy)' == 'true' AND Exists('$(TypeScriptParserNativePath)')">
+  <!-- 自动检测运行时标识符 -->
+  <PropertyGroup>
+    <TypeScriptParserRuntimeIdentifier Condition="'$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</TypeScriptParserRuntimeIdentifier>
+    <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('Windows'))">win-x64</TypeScriptParserRuntimeIdentifier>
+    <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('Linux'))">linux-x64</TypeScriptParserRuntimeIdentifier>
+    <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('OSX'))">osx-arm64</TypeScriptParserRuntimeIdentifier>
+    
+    <TypeScriptParserNativePath>$(MSBuildThisFileDirectory)../runtimes/$(TypeScriptParserRuntimeIdentifier)/native/</TypeScriptParserNativePath>
+  </PropertyGroup>
+
+  <!-- 包含native库文件到输出目录 -->
+  <ItemGroup Condition="Exists('$(TypeScriptParserNativePath)')">
     <TypeScriptParserNativeFiles Include="$(TypeScriptParserNativePath)**/*" />
+    <None Include="@(TypeScriptParserNativeFiles)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
-  <!-- 验证配置的目标 -->
-  <Target Name="ValidateTypeScriptParserNativeLibraries" BeforeTargets="BeforeBuild">
-    <Error Text="无法确定运行时平台标识符。请设置RuntimeIdentifier属性或确保在支持的平台上构建。当前检测到的RID: '$(TypeScriptParserRuntimeIdentifier)'" 
-           Condition="'$(TypeScriptParserRuntimeIdentifier)' == ''" />
-    
-    <Warning Text="未找到平台 $(TypeScriptParserRuntimeIdentifier) 的native库文件: $(TypeScriptParserNativePath)" 
-             Condition="!Exists('$(TypeScriptParserNativePath)')" />
-    
-    <Message Text="TypeScriptParser Native库配置:" Importance="high" 
-             Condition="'$(TypeScriptParserVerbose)' == 'true'" />
-    <Message Text="  - 目标RID: $(TypeScriptParserRuntimeIdentifier)" Importance="high" 
-             Condition="'$(TypeScriptParserVerbose)' == 'true'" />
-    <Message Text="  - Native路径: $(TypeScriptParserNativePath)" Importance="high" 
-             Condition="'$(TypeScriptParserVerbose)' == 'true'" />
-    <Message Text="  - 启用复制: $(TypeScriptParserEnableRuntimeCopy)" Importance="high" 
-             Condition="'$(TypeScriptParserVerbose)' == 'true'" />
-  </Target>
-
-  <!-- 构建时复制native库文件到输出目录 -->
-  <Target Name="CopyTypeScriptParserNativeFiles" 
-          BeforeTargets="BeforeBuild" 
-          AfterTargets="ValidateTypeScriptParserNativeLibraries"
-          Condition="'$(TypeScriptParserEnableRuntimeCopy)' == 'true' AND '@(TypeScriptParserNativeFiles)' != ''">
-    
-    <Copy SourceFiles="@(TypeScriptParserNativeFiles)" 
-          DestinationFolder="$(OutputPath)" 
-          SkipUnchangedFiles="true"
-          UseHardlinksIfPossible="false" />
-    
-    <Message Text="复制TypeScript解析器native库文件: $(TypeScriptParserRuntimeIdentifier) -> $(OutputPath)" 
-             Importance="high" />
-    
-    <!-- 详细日志 -->
-    <Message Text="复制的文件: @(TypeScriptParserNativeFiles)" 
-             Importance="normal" 
-             Condition="'$(TypeScriptParserVerbose)' == 'true'" />
-  </Target>
-
   <!-- 发布时包含native库文件 -->
-  <Target Name="IncludeTypeScriptParserNativeFilesInPublish" 
-          BeforeTargets="PrepareForPublish"
-          Condition="'$(TypeScriptParserEnableRuntimeCopy)' == 'true' AND '@(TypeScriptParserNativeFiles)' != ''">
-    
-    <ItemGroup>
-      <ResolvedFileToPublish Include="@(TypeScriptParserNativeFiles)">
-        <RelativePath>%(Filename)%(Extension)</RelativePath>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </ResolvedFileToPublish>
-    </ItemGroup>
-    
-    <Message Text="包含TypeScript解析器native库文件到发布输出" 
-             Importance="high" />
-  </Target>
-
-  <!-- 清理时删除复制的native库文件 -->
-  <Target Name="CleanTypeScriptParserNativeFiles" BeforeTargets="Clean">
-    <ItemGroup>
-      <TypeScriptParserFilesToDelete Include="$(OutputPath)tree-sitter*.dll" />
-      <TypeScriptParserFilesToDelete Include="$(OutputPath)libtree-sitter*.so" />
-      <TypeScriptParserFilesToDelete Include="$(OutputPath)libtree-sitter*.dylib" />
-    </ItemGroup>
-    
-    <Delete Files="@(TypeScriptParserFilesToDelete)" ContinueOnError="true" />
-    
-    <Message Text="清理TypeScript解析器native库文件" 
-             Importance="normal" 
-             Condition="'@(TypeScriptParserFilesToDelete)' != ''" />
-  </Target>
-
-  <!-- 单文件发布时的特殊处理 -->
-  <Target Name="HandleTypeScriptParserSingleFilePublish" 
-          BeforeTargets="PrepareForPublish"
-          Condition="'$(PublishSingleFile)' == 'true' AND '$(TypeScriptParserEnableRuntimeCopy)' == 'true'">
-    
-    <Warning Text="检测到单文件发布模式。TypeScriptParser native库将被提取到临时目录，可能影响启动性能。" />
-    
-    <!-- 确保native库文件被排除在单文件包之外 -->
-    <ItemGroup>
-      <ResolvedFileToPublish Update="@(TypeScriptParserNativeFiles)">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </ResolvedFileToPublish>
-    </ItemGroup>
-  </Target>
+  <ItemGroup Condition="'$(PublishDir)' != '' AND Exists('$(TypeScriptParserNativePath)')">
+    <ResolvedFileToPublish Include="@(TypeScriptParserNativeFiles)">
+      <RelativePath>%(Filename)%(Extension)</RelativePath>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <ExcludeFromSingleFile Condition="'$(PublishSingleFile)' == 'true'">true</ExcludeFromSingleFile>
+    </ResolvedFileToPublish>
+  </ItemGroup>
 
 </Project>

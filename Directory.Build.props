@@ -1,23 +1,10 @@
 <Project>
 
   <PropertyGroup>
-    <!-- 版本信息集中管理 -->
-    <VersionPrefix>1.0.0</VersionPrefix>
-    <VersionSuffix Condition="'$(VersionSuffix)' == ''"></VersionSuffix>
+    <!-- 版本信息 -->
+    <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <FileVersion>1.0.0</FileVersion>
-    
-    <!-- 上游依赖版本 -->
-    <TreeSitterCoreVersion>0.20.8</TreeSitterCoreVersion>
-    <TreeSitterTypeScriptVersion>0.20.3</TreeSitterTypeScriptVersion>
-    
-    <!-- 包版本计算 -->
-    <TypeScriptParserVersion>$(VersionPrefix)</TypeScriptParserVersion>
-    <TypeScriptParserVersion Condition="'$(VersionSuffix)' != ''">$(VersionPrefix)-$(VersionSuffix)</TypeScriptParserVersion>
-    
-    <!-- Native包使用基础版本，避免版本元数据警告 -->
-    <TypeScriptParserNativeVersion>$(VersionPrefix)</TypeScriptParserNativeVersion>
-    <TypeScriptParserNativeVersion Condition="'$(VersionSuffix)' != ''">$(VersionPrefix)-$(VersionSuffix)</TypeScriptParserNativeVersion>
     
     <!-- 共同的包信息 -->
     <Authors>TypeScriptParser Team</Authors>
@@ -28,11 +15,10 @@
     <RepositoryUrl>https://github.com/your-org/csharp-tree-sitter</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReleaseNotes>
-基于Tree-sitter $(TreeSitterCoreVersion)的TypeScript解析器
-- TypeScript语法支持版本: $(TreeSitterTypeScriptVersion)
+基于Tree-sitter的TypeScript解析器
 - 支持跨平台Native库自动管理
 - 零配置用户体验
-- Win-x64, Linux-x64 平台支持
+- 支持主流平台: Linux-x64, macOS-ARM64, Win-x64
     </PackageReleaseNotes>
     
     <!-- 构建配置 -->
@@ -41,14 +27,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <!-- 调试构建的版本后缀 -->
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug' AND '$(VersionSuffix)' == ''">
-    <VersionSuffix>debug</VersionSuffix>
-  </PropertyGroup>
-
-  <!-- CI构建的版本后缀 -->
-  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true' AND '$(GITHUB_REF_TYPE)' != 'tag'">
-    <VersionSuffix Condition="'$(VersionSuffix)' == ''">ci-$(GITHUB_RUN_NUMBER)</VersionSuffix>
+  <!-- Debug版本后缀 -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <VersionSuffix Condition="'$(VersionSuffix)' == ''">debug</VersionSuffix>
   </PropertyGroup>
 
 </Project>

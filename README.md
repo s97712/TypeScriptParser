@@ -1,151 +1,39 @@
-# TypeScriptParser
+# TypeScript Parser
 
-## Introduction
+基于Tree-sitter的TypeScript解析器 - .NET绑定
 
-TypeScriptParser provides C# bindings for the [Tree-sitter](https://github.com/tree-sitter/tree-sitter) parsing library, specifically optimized for TypeScript language parsing. Through P/Invoke calls, C# developers can directly use the powerful Tree-sitter parsing functionality in the .NET environment.
-
-## Project Structure
-
-- **TypeScriptParser**: Main library project containing complete Tree-sitter C# bindings and TypeScript parser
-- **TypeScriptParser.Tests**: xUnit test project ensuring parser correctness
-
-## Features
-
-- Complete Tree-sitter API C# bindings
-- Dedicated TypeScript language support
-- Syntax tree traversal and querying
-- Memory-safe resource management
-- Support for incremental parsing and syntax tree editing
-
-## Requirements
-
-- .NET 9.0 or higher
-- Windows/Linux/macOS (cross-platform support)
-- x64 architecture
-
-## Setup
-
-Pull the required submodules:
+## 构建步骤
 
 ```bash
-git submodule update --init --recursive
+# 1. 恢复依赖
+dotnet restore
+
+# 2. 构建项目
+dotnet build -c Release
+
+# 3. 运行测试
+dotnet test --configuration Release --no-build
+
+# 4. 打包NuGet包
+dotnet pack -c Release --no-build -o ./artifacts
 ```
 
-## Building
-
-1. Build native dependency libraries:
-   ```bash
-   cd tree-sitter
-   make  # Linux/macOS
-   # or use nmake on Windows
-   cd ..
-   ```
-
-2. Build the .NET project:
-   ```bash
-   dotnet build
-   ```
-
-## Usage
-
-### Basic Usage Example
-
-```csharp
-using TreeSitter.TypeScript;
-
-// Create parser instance
-using var parser = new TypeScriptParser();
-
-// Parse TypeScript code
-string sourceCode = "const message: string = 'Hello, World!';";
-using var tree = parser.ParseString(sourceCode);
-
-// Get root node
-var rootNode = tree.root_node();
-
-// Create cursor for tree traversal
-using var cursor = parser.CreateCursor(tree);
-```
-
-### Syntax Tree Traversal
-
-```csharp
-using var parser = new TypeScriptParser();
-string code = @"
-function greet(name: string): string {
-    return `Hello, ${name}!`;
-}
-";
-
-using var tree = parser.ParseString(code);
-using var cursor = parser.CreateCursor(tree);
-
-// Traverse syntax tree
-while (cursor.goto_first_child())
-{
-    var node = cursor.current_node();
-    Console.WriteLine($"Node: {node.type()}, Text: {node.text(code)}");
-}
-```
-
-## API Documentation
-
-### TypeScriptParser Class
-
-- `ParseString(string sourceCode)`: Parse string and return syntax tree
-- `CreateCursor(TSTree tree)`: Create syntax tree cursor
-- `Language`: Get TypeScript language object
-- `IsAvailable`: Check if parser is available
-
-### Core Types
-
-- `TSTree`: Syntax tree object
-- `TSNode`: Syntax tree node
-- `TSCursor`: Syntax tree cursor
-- `TSLanguage`: Language definition
-- `TSParser`: Underlying parser
-
-## Testing
-
-Run unit tests:
+## 开发构建
 
 ```bash
-dotnet test
+# Debug模式构建和测试
+dotnet build -c Debug
+dotnet test --configuration Debug --no-build
 ```
 
-Tests cover core parser functionality:
-- Basic parsing functionality
-- Error handling
-- Resource management
-- Syntax tree traversal
+## 项目结构
 
-## Performance Features
+- `TypeScriptParser/` - 主要的.NET绑定库
+- `TypeScriptParser.Native/` - 跨平台Native库包
+- `TypeScriptParser.Tests/` - 单元测试
 
-- Incremental parsing: Support for incremental updates to existing syntax trees
-- Memory efficiency: Uses reference counting and automatic garbage collection
-- High-speed parsing: Based on LR parsing algorithm
-- Error recovery: Able to recover from syntax errors and continue parsing
+## 支持平台
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Contributing
-
-Issues and Pull Requests are welcome! Before contributing, please ensure:
-
-1. All tests run and pass
-2. Follow existing code style
-3. Add appropriate test cases for new features
-
-## Technology Stack
-
-- **Language**: C# (.NET 9.0)
-- **Test Framework**: xUnit
-- **Native Interop**: P/Invoke
-- **Package Management**: NuGet
-- **Build System**: MSBuild
-
----
-
-For more information, visit the [Tree-sitter official documentation](https://tree-sitter.github.io/tree-sitter/)
+- Linux x64
+- macOS ARM64  
+- Windows x64
