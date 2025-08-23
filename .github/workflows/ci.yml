@@ -155,6 +155,10 @@ jobs:
         dotnet add TypeScriptParser.TestPackage/TypeScriptParser.TestPackage.csproj package TypeScriptParser --version $VERSION --source ./artifacts
       shell: bash
       
+    - name: Restore Dependencies
+      run: dotnet restore TypeScriptParser.TestPackage/
+      shell: bash
+      
     - name: Test Package
       run: dotnet test TypeScriptParser.TestPackage/ -c Release
       shell: bash
