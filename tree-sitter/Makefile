@@ -18,14 +18,17 @@ ifeq ($(UNAME_S),Darwin)
 endif
 ifeq ($(OS),Windows_NT)
     LIB_EXT=.dll
+    LIB_PREFIX=
+else
+    LIB_PREFIX=lib
 endif
 ifndef LIB_EXT
     LIB_EXT=.so
 endif
 
 LIBS=\
-	$(BIN)/libtree-sitter$(LIB_EXT) \
-	$(BIN)/libtree-sitter-typescript$(LIB_EXT) \
+	$(BIN)/$(LIB_PREFIX)tree-sitter$(LIB_EXT) \
+	$(BIN)/$(LIB_PREFIX)tree-sitter-typescript$(LIB_EXT) \
 
 all: dirs $(LIBS)
 
@@ -56,7 +59,7 @@ $(BIN)/tree-sitter.obj: \
 		-Itree-sitter/lib/src -Itree-sitter/lib/src/unicode \
 		-c tree-sitter/lib/src/lib.c
 
-$(BIN)/libtree-sitter$(LIB_EXT): $(BIN)/tree-sitter.obj
+$(BIN)/$(LIB_PREFIX)tree-sitter$(LIB_EXT): $(BIN)/tree-sitter.obj
 	gcc $(LFLAGS) $(CFLAGS) -o $@ $^
 
 
@@ -70,7 +73,7 @@ $(BIN)/tree-sitter-typescript-parser.obj: tree-sitter-typescript/typescript/src/
 $(BIN)/tree-sitter-typescript-scanner.obj: tree-sitter-typescript/typescript/src/scanner.c
 	gcc $(CFLAGS) -o $@ -Itree-sitter-typescript/typescript/src -c $^
 
-$(BIN)/libtree-sitter-typescript$(LIB_EXT): $(BIN)/tree-sitter-typescript-parser.obj $(BIN)/tree-sitter-typescript-scanner.obj
+$(BIN)/$(LIB_PREFIX)tree-sitter-typescript$(LIB_EXT): $(BIN)/tree-sitter-typescript-parser.obj $(BIN)/tree-sitter-typescript-scanner.obj
 	gcc $(LFLAGS) $(CFLAGS) -o $@ $^
 
 ########
