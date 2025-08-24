@@ -14,6 +14,7 @@
     <PackageProjectUrl>https://github.com/your-org/csharp-tree-sitter</PackageProjectUrl>
     <RepositoryUrl>https://github.com/your-org/csharp-tree-sitter</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>基于Tree-sitter的TypeScript解析器 - 支持跨平台Native库自动管理</PackageReleaseNotes>
     
     <!-- 构建配置 -->
