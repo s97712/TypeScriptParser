@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace GitHub.TreeSitter
+namespace TypeScriptParser.TreeSitter
 {
     public enum TSInputEncoding {
         TSInputEncodingUTF8,

@@ -4,21 +4,16 @@
 
 ## 安装
 
-### 从NuGet安装
-
 ```bash
 dotnet add package TypeScriptParser
 ```
 
-或通过包管理器控制台：
+## 文档
 
-```powershell
-Install-Package TypeScriptParser
-```
+- [使用指南](docs/USAGE_GUIDE.md) - 快速开始和常用示例
+- [API参考](docs/API_REFERENCE.md) - 完整的API文档
 
-也可以访问 [NuGet包页面](https://www.nuget.org/packages/TypeScriptParser) 查看更多安装选项。
-
-## 快速开始
+## 构建项目
 
 ```bash
 # 1. 构建native库
@@ -36,6 +31,10 @@ dotnet test --configuration Release
 
 # 4. 打包NuGet包
 dotnet pack -c Release  -o ./artifacts
+
+# 5. 测试打包
+dotnet package add  TypeScriptParser --project TypeScriptParser.TestPackage/ --version 0.0.1-dev
+dotnet test TypeScriptParser.TestPackage
 ```
 
 ## 项目结构
@@ -44,15 +43,7 @@ dotnet pack -c Release  -o ./artifacts
 - [`TypeScriptParser.Native/`](TypeScriptParser.Native/) - 跨平台Native库包
 - [`TypeScriptParser.Tests/`](TypeScriptParser.Tests/) - 单元测试
 
-## 开发指南
-
-### Debug模式构建
-```bash
-dotnet build -c Debug
-dotnet test --configuration Debug 
-```
-
-### 支持平台
+## 支持平台
 - Linux x64
 - macOS ARM64  
 - Windows x64

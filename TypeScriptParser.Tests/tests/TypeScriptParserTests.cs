@@ -1,6 +1,7 @@
 ﻿using System;
 using Xunit;
-using TreeSitter.TypeScript;
+using TypeScriptParser;
+using TypeScriptParser.TreeSitter;
 
 namespace TypeScriptParser.Tests
 {
@@ -10,19 +11,20 @@ namespace TypeScriptParser.Tests
         public void TypeScriptParser_Constructor_ShouldCreateValidInstance()
         {
             // Arrange & Act
-            using var parser = new TreeSitter.TypeScript.TypeScriptParser();
+            using var parser = new Parser();
             
             // Assert
             Assert.NotNull(parser);
-            Assert.NotNull(parser.Language);
-            Assert.True(parser.IsAvailable);
+            // 通过能否成功解析来验证Parser可用性
+            var tree = parser.ParseString("const x = 1;");
+            Assert.NotNull(tree);
         }
 
         [Fact]
         public void ParseString_SimpleTypeScriptCode_ShouldReturnValidTree()
         {
             // Arrange
-            using var parser = new TreeSitter.TypeScript.TypeScriptParser();
+            using var parser = new Parser();
             string sourceCode = "const x: number = 42;";
             
             // Act
@@ -36,7 +38,7 @@ namespace TypeScriptParser.Tests
         public void ParseString_EmptyString_ShouldReturnValidTree()
         {
             // Arrange
-            using var parser = new TreeSitter.TypeScript.TypeScriptParser();
+            using var parser = new Parser();
             string sourceCode = "";
             
             // Act
@@ -50,46 +52,48 @@ namespace TypeScriptParser.Tests
         public void CreateCursor_WithValidTree_ShouldReturnCursor()
         {
             // Arrange
-            using var parser = new TreeSitter.TypeScript.TypeScriptParser();
+            using var parser = new Parser();
             string sourceCode = "function hello() { return 'world'; }";
             using var tree = parser.ParseString(sourceCode);
             
             // Act
-            using var cursor = parser.CreateCursor(tree);
+            using var cursor = new TSCursor(tree.root_node(), tree.language());
             
             // Assert
             Assert.NotNull(cursor);
         }
 
         [Fact]
-        public void CreateCursor_WithNullTree_ShouldThrowArgumentNullException()
+        public void CreateCursor_WithValidNode_ShouldWork()
         {
             // Arrange
-            using var parser = new TreeSitter.TypeScript.TypeScriptParser();
+            using var parser = new Parser();
+            var tree = parser.ParseString("const x = 1;");
             
-            // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => parser.CreateCursor(null));
+            // Act & Assert - 测试正常创建游标
+            using var cursor = new TSCursor(tree.root_node(), tree.language());
+            Assert.NotNull(cursor);
+            Assert.NotNull(cursor.current_symbol());
         }
 
         [Fact]
-        public void Dispose_AfterDispose_IsAvailableShouldBeFalse()
+        public void Dispose_AfterDispose_ParseStringShouldThrow()
         {
             // Arrange
-            var parser = new TreeSitter.TypeScript.TypeScriptParser();
-            Assert.True(parser.IsAvailable);
+            var parser = new Parser();
             
             // Act
             parser.Dispose();
             
             // Assert
-            Assert.False(parser.IsAvailable);
+            Assert.Throws<ObjectDisposedException>(() => parser.ParseString("const x = 1;"));
         }
 
         [Fact]
         public void ParseString_AfterDispose_ShouldThrowObjectDisposedException()
         {
             // Arrange
-            var parser = new TreeSitter.TypeScript.TypeScriptParser();
+            var parser = new Parser();
             parser.Dispose();
             
             // Act & Assert

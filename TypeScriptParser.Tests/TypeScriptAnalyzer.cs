@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
-using GitHub.TreeSitter;
+using TypeScriptParser.TreeSitter;
 using System.Runtime.InteropServices;
+using TypeScriptParser;
 
-namespace TreeSitter.TypeScript
+namespace TypeScriptParser.Tests
 {
     // 参数信息结构
     public class Parameter
@@ -28,13 +29,13 @@ namespace TreeSitter.TypeScript
     // TypeScript分析器模块
     public class TypeScriptAnalyzer : IDisposable
     {
-        private readonly TypeScriptParser parser;
+        private readonly Parser parser;
         private readonly List<ExportedFunction> exportedFunctions = [];
         private bool disposed = false;
 
         public TypeScriptAnalyzer()
         {
-            parser = new TypeScriptParser();
+            parser = new Parser();
         }
 
         public List<ExportedFunction> AnalyzeFile(string fileContent)
@@ -49,7 +50,7 @@ namespace TreeSitter.TypeScript
                 return exportedFunctions;
             }
 
-            using var cursor = parser.CreateCursor(tree);
+            using var cursor = new TSCursor(tree.root_node(), tree.language());
             TraverseForExports(cursor, fileContent);
             
             return [.. exportedFunctions];
