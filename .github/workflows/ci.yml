@@ -149,14 +149,14 @@ jobs:
         echo "VERSION=$VERSION" >> $GITHUB_ENV
       shell: bash
       
+    - name: Restore Dependencies
+      run: dotnet restore TypeScriptParser.TestPackage/
+      shell: bash
+      
     - name: Update Package Reference
       run: |
         dotnet remove TypeScriptParser.TestPackage/TypeScriptParser.TestPackage.csproj package TypeScriptParser
         dotnet add TypeScriptParser.TestPackage/TypeScriptParser.TestPackage.csproj package TypeScriptParser --version $VERSION --source ./artifacts
-      shell: bash
-      
-    - name: Restore Dependencies
-      run: dotnet restore TypeScriptParser.TestPackage/
       shell: bash
       
     - name: Test Package
