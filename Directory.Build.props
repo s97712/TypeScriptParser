@@ -1,12 +1,12 @@
 <Project>
 
   <PropertyGroup>
-    <!-- 版本信息 -->
-    <Version>1.0.0</Version>
+    <!-- 版本管理 -->
+    <Version Condition="'$(Version)' == ''">0.0.1-dev</Version>
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <FileVersion>1.0.0</FileVersion>
     
-    <!-- 共同的包信息 -->
+    <!-- 包信息 -->
     <Authors>TypeScriptParser Team</Authors>
     <Company>TypeScriptParser</Company>
     <Copyright>Copyright © $(Company) $([System.DateTime]::Now.Year)</Copyright>
@@ -14,22 +14,12 @@
     <PackageProjectUrl>https://github.com/your-org/csharp-tree-sitter</PackageProjectUrl>
     <RepositoryUrl>https://github.com/your-org/csharp-tree-sitter</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>
-基于Tree-sitter的TypeScript解析器
-- 支持跨平台Native库自动管理
-- 零配置用户体验
-- 支持主流平台: Linux-x64, macOS-ARM64, Win-x64
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>基于Tree-sitter的TypeScript解析器 - 支持跨平台Native库自动管理</PackageReleaseNotes>
     
     <!-- 构建配置 -->
     <LangVersion>latest</LangVersion>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
-
-  <!-- Debug版本后缀 -->
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <VersionSuffix Condition="'$(VersionSuffix)' == ''">debug</VersionSuffix>
   </PropertyGroup>
 
 </Project>
