@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeScriptParser", "TypeScr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeScriptParser.Tests", "TypeScriptParser.Tests\TypeScriptParser.Tests.csproj", "{7DA70DA9-2885-4377-A2C8-F38A635AE7D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeScriptParser.Native", "TypeScriptParser.Native\TypeScriptParser.Native.csproj", "{5A4230C7-D8EE-4C93-89BA-6B05B03E32EF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

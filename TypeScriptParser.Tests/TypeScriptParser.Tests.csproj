@@ -21,15 +21,13 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
-
-
   <ItemGroup>
     <ProjectReference Include="..\TypeScriptParser\TypeScriptParser.csproj" />
   </ItemGroup>
 
   <!-- 导入Native库构建目标 - 必须在项目末尾 -->
-  <Import Project="..\TypeScriptParser.Native\build\TypeScriptParser.Native.targets"
-          Condition="Exists('..\TypeScriptParser.Native\build\TypeScriptParser.Native.targets')" />
+  <Import Project="..\TypeScriptParser\build\TypeScriptParser.targets"
+          Condition="Exists('..\TypeScriptParser\build\TypeScriptParser.targets')" />
 
 
   <!-- Native libraries now managed automatically via NuGet packages -->

@@ -146,10 +146,6 @@ if (root.has_error())
 - .NET 9.0 或更高版本
 - 支持的平台：Windows (x64), Linux (x64), macOS (ARM64/x64)
 
-## 相关包
-
-- `TypeScriptParser.Native` - 包含跨平台原生库的运行时包
-
 ## 许可证
 
 本项目基于MIT许可证开源。

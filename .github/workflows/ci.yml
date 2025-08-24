@@ -32,8 +32,8 @@ jobs:
         
     - name: Copy Native Files
       run: |
-        mkdir -p TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native
-        cp -r tree-sitter/dist/* TypeScriptParser.Native/runtimes/${{ matrix.rid }}/native/
+        mkdir -p TypeScriptParser/runtimes/${{ matrix.rid }}/native
+        cp -r tree-sitter/dist/* TypeScriptParser/runtimes/${{ matrix.rid }}/native/
         echo "Files copied for ${{ matrix.rid }}:"
       shell: bash
       
@@ -51,7 +51,7 @@ jobs:
     - name: Debug Runtime Files Before Test
       run: |
         echo "=== Runtime files structure ==="
-        find ./TypeScriptParser.Native/runtimes/ -type f
+        find ./TypeScriptParser/runtimes/ -type f
         
         echo "=== Test output directory before testing ==="
         ls -la TypeScriptParser.Tests/bin/Release/net9.0/ || echo "Test output directory not found"
@@ -64,7 +64,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: native-${{ matrix.rid }}
-        path: TypeScriptParser.Native/runtimes/
+        path: TypeScriptParser/runtimes/
         retention-days: 1
 
   pack-and-publish:
@@ -83,7 +83,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         pattern: native-*
-        path: TypeScriptParser.Native/runtimes/
+        path: TypeScriptParser/runtimes/
         merge-multiple: true
         
     - name: Set Version

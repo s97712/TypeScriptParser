@@ -1,0 +1,4 @@
+<Project>
+  <!-- 导入主要的props文件 -->
+  <Import Project="../build/TypeScriptParser.props" />
+</Project>

@@ -21,8 +21,8 @@ dotnet add package TypeScriptParser
 
 # 2. 复制运行时文件
 RID=$(dotnet --info | grep "RID:" | awk '{print $2}')
-mkdir -p TypeScriptParser.Native/runtimes/$RID/native
-cp -r tree-sitter/dist/* TypeScriptParser.Native/runtimes/$RID/native/
+mkdir -p TypeScriptParser/runtimes/$RID/native
+cp -r tree-sitter/dist/* TypeScriptParser/runtimes/$RID/native/
 
 # 3. 构建和测试
 dotnet restore
@@ -40,7 +40,6 @@ dotnet test TypeScriptParser.TestPackage
 ## 项目结构
 
 - [`TypeScriptParser/`](TypeScriptParser/) - 主要的.NET绑定库
-- [`TypeScriptParser.Native/`](TypeScriptParser.Native/) - 跨平台Native库包
 - [`TypeScriptParser.Tests/`](TypeScriptParser.Tests/) - 单元测试
 
 ## 支持平台
