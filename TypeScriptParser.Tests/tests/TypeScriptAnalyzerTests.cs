@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using Xunit;
-using TreeSitter.TypeScript;
+using TypeScriptParser.Tests;
 
 namespace TypeScriptParser.Tests
 {

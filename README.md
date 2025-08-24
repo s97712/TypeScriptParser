@@ -18,7 +18,7 @@ Install-Package TypeScriptParser
 
 也可以访问 [NuGet包页面](https://www.nuget.org/packages/TypeScriptParser) 查看更多安装选项。
 
-## 快速开始
+## 构建项目
 
 ```bash
 # 1. 构建native库
@@ -36,6 +36,10 @@ dotnet test --configuration Release
 
 # 4. 打包NuGet包
 dotnet pack -c Release  -o ./artifacts
+
+# 5. 测试打包
+dotnet package add  TypeScriptParser --project TypeScriptParser.TestPackage/ --version 0.0.1-dev
+dotnet test TypeScriptParser.TestPackage
 ```
 
 ## 项目结构
