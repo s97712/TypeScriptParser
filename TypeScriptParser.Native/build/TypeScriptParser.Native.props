@@ -16,8 +16,7 @@
     <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND '$(PlatformTarget)' == 'x64' AND $([MSBuild]::IsOSPlatform('Windows'))">win-x64</TypeScriptParserRuntimeIdentifier>
     <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND '$(PlatformTarget)' == 'x86' AND $([MSBuild]::IsOSPlatform('Windows'))">win-x86</TypeScriptParserRuntimeIdentifier>
     <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('Linux'))">linux-x64</TypeScriptParserRuntimeIdentifier>
-    <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('OSX')) AND '$(RuntimeInformation.ProcessArchitecture)' != 'Arm64'">osx-x64</TypeScriptParserRuntimeIdentifier>
-    <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('OSX')) AND '$(RuntimeInformation.ProcessArchitecture)' == 'Arm64'">osx-arm64</TypeScriptParserRuntimeIdentifier>
+    <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('OSX'))">osx-arm64</TypeScriptParserRuntimeIdentifier>
     
     <!-- 默认回退到win-x64 -->
     <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == ''">win-x64</TypeScriptParserRuntimeIdentifier>
