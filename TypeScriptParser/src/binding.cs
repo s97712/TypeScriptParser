@@ -170,7 +170,7 @@ namespace TypeScriptParser.TreeSitter
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void TSLogCallback(IntPtr payload, TSLogType logType, [MarshalAs(UnmanagedType.LPUTF8Str)] string message);
+        private delegate void TSLogCallback(IntPtr payload, TSLogType logType, [MarshalAs(UnmanagedType.LPStr)] string message);
 
         private class _TSLoggerCode 
         {
@@ -273,7 +273,7 @@ namespace TypeScriptParser.TreeSitter
         * length in bytes.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr ts_parser_parse_string(IntPtr parser, IntPtr oldTree, [MarshalAs(UnmanagedType.LPUTF8Str)] string input, uint length);
+        private static extern IntPtr ts_parser_parse_string(IntPtr parser, IntPtr oldTree, [MarshalAs(UnmanagedType.LPStr)] string input, uint length);
 
         /**
         * Use the parser to parse some source code stored in one contiguous buffer.
@@ -643,7 +643,7 @@ namespace TypeScriptParser.TreeSitter
         * `ts_language_field_id_for_name` function.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
-        private static extern TSNode ts_node_child_by_field_name(TSNode self, [MarshalAs(UnmanagedType.LPUTF8Str)] string field_name, uint field_name_length);
+        private static extern TSNode ts_node_child_by_field_name(TSNode self, [MarshalAs(UnmanagedType.LPStr)] string field_name, uint field_name_length);
 
         /**
         * Get the node's child with the given numerical field id.
@@ -933,7 +933,7 @@ namespace TypeScriptParser.TreeSitter
         private static extern IntPtr ts_query_string_value_for_id(IntPtr query, uint id, out uint length);
 
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void ts_query_disable_capture(IntPtr query, [MarshalAs(UnmanagedType.LPUTF8Str)] string captureName, uint captureNameLength);
+        private static extern void ts_query_disable_capture(IntPtr query, [MarshalAs(UnmanagedType.LPStr)] string captureName, uint captureNameLength);
 
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_query_disable_pattern(IntPtr query, uint patternIndex);
@@ -1102,7 +1102,7 @@ namespace TypeScriptParser.TreeSitter
         * 2. The type of error is written to the `error_type` parameter.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr ts_query_new(IntPtr language, [MarshalAs(UnmanagedType.LPUTF8Str)] string source, uint source_len, out uint error_offset, out TSQueryError error_type);
+        private static extern IntPtr ts_query_new(IntPtr language, [MarshalAs(UnmanagedType.LPStr)] string source, uint source_len, out uint error_offset, out TSQueryError error_type);
 
         /**
         * Get the number of distinct node types in the language.
@@ -1120,7 +1120,7 @@ namespace TypeScriptParser.TreeSitter
         * Get the numerical id for the given node type string.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
-        private static extern ushort ts_language_symbol_for_name(IntPtr language, [MarshalAs(UnmanagedType.LPUTF8Str)] string str, uint length, bool is_named);
+        private static extern ushort ts_language_symbol_for_name(IntPtr language, [MarshalAs(UnmanagedType.LPStr)] string str, uint length, bool is_named);
 
         /**
         * Get the number of distinct field names in the language.
@@ -1138,7 +1138,7 @@ namespace TypeScriptParser.TreeSitter
         * Get the numerical id for the given field name string.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
-        private static extern ushort ts_language_field_id_for_name(IntPtr language, [MarshalAs(UnmanagedType.LPUTF8Str)] string str, uint length);
+        private static extern ushort ts_language_field_id_for_name(IntPtr language, [MarshalAs(UnmanagedType.LPStr)] string str, uint length);
 
         /**
         * Check whether the given node type id belongs to named nodes, anonymous nodes,
