@@ -11,8 +11,8 @@
     <Company>TypeScriptParser</Company>
     <Copyright>Copyright © $(Company) $([System.DateTime]::Now.Year)</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/your-org/csharp-tree-sitter</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/your-org/csharp-tree-sitter</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/s97712/TypeScriptParser</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/s97712/TypeScriptParser</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>基于Tree-sitter的TypeScript解析器 - 支持跨平台Native库自动管理</PackageReleaseNotes>

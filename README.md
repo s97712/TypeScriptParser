@@ -2,6 +2,22 @@
 
 基于Tree-sitter的TypeScript解析器 - .NET绑定
 
+## 安装
+
+### 从NuGet安装
+
+```bash
+dotnet add package TypeScriptParser
+```
+
+或通过包管理器控制台：
+
+```powershell
+Install-Package TypeScriptParser
+```
+
+也可以访问 [NuGet包页面](https://www.nuget.org/packages/TypeScriptParser) 查看更多安装选项。
+
 ## 快速开始
 
 ```bash
