@@ -11,6 +11,11 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
+  <!-- README文件包含到包中 -->
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
   <!-- Native库依赖 -->
   <ItemGroup>
     <ProjectReference Include="..\TypeScriptParser.Native\TypeScriptParser.Native.csproj" />

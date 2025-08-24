@@ -10,6 +10,11 @@
     <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
 
+  <!-- README文件包含到包中 -->
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
   <!-- 包含runtime和build文件到NuGet包 -->
   <ItemGroup>
     <Content Include="runtimes/**/*" Pack="true" PackagePath="runtimes/" />
