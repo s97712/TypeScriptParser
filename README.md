@@ -56,6 +56,9 @@ dotnet test TypeScriptParser.TestPackage
 3. 合并到main分支
 
 ### 发布流程
-1. 创建版本标签：`git tag v1.2.0 && git push origin v1.2.0`
+1. 创建版本标签：
+```bash
+(VERSION=v0.0.1 && git tag $VERSION && git push origin $VERSION)
+```
 2. 自动构建测试发布到NuGet.org
 3. 版本号格式：`1.2.0.{构建号}`
