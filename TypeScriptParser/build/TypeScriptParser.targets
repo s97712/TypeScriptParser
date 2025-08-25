@@ -8,16 +8,29 @@
     <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('OSX'))">osx-arm64</TypeScriptParserRuntimeIdentifier>
     
     <TypeScriptParserNativePath>$(MSBuildThisFileDirectory)../runtimes/$(TypeScriptParserRuntimeIdentifier)/native/</TypeScriptParserNativePath>
+    
+    <!-- 检测是否为源生成器项目 -->
+    <IsSourceGenerator Condition="'$(OutputType)' == 'Library' AND '$(IncludeBuildOutput)' == 'false'">true</IsSourceGenerator>
   </PropertyGroup>
 
-  <!-- 包含native库文件到输出目录 -->
+  <!-- 收集native库文件 -->
   <ItemGroup Condition="Exists('$(TypeScriptParserNativePath)')">
     <TypeScriptParserNativeFiles Include="$(TypeScriptParserNativePath)**/*" />
+  </ItemGroup>
+
+  <!-- 源生成器项目：使用AdditionalFiles方式 -->
+  <ItemGroup Condition="'$(IsSourceGenerator)' == 'true' AND '@(TypeScriptParserNativeFiles)' != ''">
+    <AdditionalFiles Include="@(TypeScriptParserNativeFiles)" />
+    <EmbeddedResource Include="@(TypeScriptParserNativeFiles)" />
+  </ItemGroup>
+
+  <!-- 常规项目：复制到输出目录 -->
+  <ItemGroup Condition="'$(IsSourceGenerator)' != 'true' AND '@(TypeScriptParserNativeFiles)' != ''">
     <None Include="@(TypeScriptParserNativeFiles)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
-  <!-- 发布时包含native库文件 -->
-  <ItemGroup Condition="'$(PublishDir)' != '' AND Exists('$(TypeScriptParserNativePath)')">
+  <!-- 发布时包含native库文件（非源生成器项目） -->
+  <ItemGroup Condition="'$(IsSourceGenerator)' != 'true' AND '$(PublishDir)' != '' AND '@(TypeScriptParserNativeFiles)' != ''">
     <ResolvedFileToPublish Include="@(TypeScriptParserNativeFiles)">
       <RelativePath>%(Filename)%(Extension)</RelativePath>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
