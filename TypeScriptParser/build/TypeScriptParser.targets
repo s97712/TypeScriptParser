@@ -19,9 +19,8 @@
   </ItemGroup>
 
   <!-- 源生成器项目：使用AdditionalFiles方式 -->
-  <ItemGroup Condition="'$(IsSourceGenerator)' == 'true' AND '@(TypeScriptParserNativeFiles)' != ''">
+  <ItemGroup>
     <AdditionalFiles Include="@(TypeScriptParserNativeFiles)" />
-    <EmbeddedResource Include="@(TypeScriptParserNativeFiles)" />
   </ItemGroup>
 
   <!-- 常规项目：复制到输出目录 -->
