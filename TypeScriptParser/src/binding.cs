@@ -170,7 +170,7 @@ namespace TypeScriptParser.TreeSitter
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void TSLogCallback(IntPtr payload, TSLogType logType, [MarshalAs(UnmanagedType.LPStr)] string message);
+        private delegate void TSLogCallback(IntPtr payload, TSLogType logType, [MarshalAs(UnmanagedType.LPUTF8Str)] string message);
 
         private class _TSLoggerCode 
         {
@@ -252,7 +252,7 @@ namespace TypeScriptParser.TreeSitter
         * this function returns `true`
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
-        //[return: MarshalAs(UnmanagedType.I1)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_parser_set_included_ranges(IntPtr parser, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] TSRange[] ranges, uint length);
 
         /**
@@ -273,7 +273,7 @@ namespace TypeScriptParser.TreeSitter
         * length in bytes.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr ts_parser_parse_string(IntPtr parser, IntPtr oldTree, [MarshalAs(UnmanagedType.LPStr)] string input, uint length);
+        private static extern IntPtr ts_parser_parse_string(IntPtr parser, IntPtr oldTree, [MarshalAs(UnmanagedType.LPUTF8Str)] string input, uint length);
 
         /**
         * Use the parser to parse some source code stored in one contiguous buffer.
@@ -558,6 +558,7 @@ namespace TypeScriptParser.TreeSitter
         * was found.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_node_is_null(TSNode node);
 
         /**
@@ -566,6 +567,7 @@ namespace TypeScriptParser.TreeSitter
         * grammar.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_node_is_named(TSNode node);
 
         /**
@@ -573,6 +575,7 @@ namespace TypeScriptParser.TreeSitter
         * order to recover from certain kinds of syntax errors.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_node_is_missing(TSNode node);
 
         /**
@@ -580,18 +583,21 @@ namespace TypeScriptParser.TreeSitter
         * which are not required the grammar, but can appear anywhere.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_node_is_extra(TSNode node);
 
         /**
         * Check if a syntax node has been edited.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_node_has_changes(TSNode node);
 
         /**
         * Check if the node is a syntax error or contains any syntax errors.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_node_has_error(TSNode node);
 
         /**
@@ -643,7 +649,7 @@ namespace TypeScriptParser.TreeSitter
         * `ts_language_field_id_for_name` function.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
-        private static extern TSNode ts_node_child_by_field_name(TSNode self, [MarshalAs(UnmanagedType.LPStr)] string field_name, uint field_name_length);
+        private static extern TSNode ts_node_child_by_field_name(TSNode self, [MarshalAs(UnmanagedType.LPUTF8Str)] string field_name, uint field_name_length);
 
         /**
         * Get the node's child with the given numerical field id.
@@ -707,6 +713,7 @@ namespace TypeScriptParser.TreeSitter
         * Check if two nodes are identical.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_node_eq(TSNode node1, TSNode node2);
 #endregion
     }
@@ -822,6 +829,7 @@ namespace TypeScriptParser.TreeSitter
         * if there was no parent node (the cursor was already on the root node).
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_tree_cursor_goto_parent(ref TSTreeCursor cursor);
 
         /**
@@ -831,6 +839,7 @@ namespace TypeScriptParser.TreeSitter
         * if there was no next sibling node.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_tree_cursor_goto_next_sibling(ref TSTreeCursor cursor);
 
         /**
@@ -840,6 +849,7 @@ namespace TypeScriptParser.TreeSitter
         * if there were no children.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_tree_cursor_goto_first_child(ref TSTreeCursor cursor);
 
         /**
@@ -915,12 +925,15 @@ namespace TypeScriptParser.TreeSitter
         private static extern IntPtr ts_query_predicates_for_pattern(IntPtr query, uint patternIndex, out uint length);
 
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_query_is_pattern_rooted(IntPtr query, uint patternIndex);
 
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_query_is_pattern_non_local(IntPtr query, uint patternIndex);
 
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_query_is_pattern_guaranteed_at_step(IntPtr query, uint byteOffset);
 
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
@@ -933,7 +946,7 @@ namespace TypeScriptParser.TreeSitter
         private static extern IntPtr ts_query_string_value_for_id(IntPtr query, uint id, out uint length);
 
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void ts_query_disable_capture(IntPtr query, [MarshalAs(UnmanagedType.LPStr)] string captureName, uint captureNameLength);
+        private static extern void ts_query_disable_capture(IntPtr query, [MarshalAs(UnmanagedType.LPUTF8Str)] string captureName, uint captureNameLength);
 
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_query_disable_pattern(IntPtr query, uint patternIndex);
@@ -996,6 +1009,7 @@ namespace TypeScriptParser.TreeSitter
         private static extern void ts_query_cursor_exec(IntPtr cursor,IntPtr query,TSNode node);
 
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_query_cursor_did_exceed_match_limit(IntPtr cursor);
 
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
@@ -1011,12 +1025,14 @@ namespace TypeScriptParser.TreeSitter
         private static extern void ts_query_cursor_set_point_range(IntPtr cursor,TSPoint start_point,TSPoint end_point);
 
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_query_cursor_next_match(IntPtr cursor,out TSQueryMatch match);
 
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
         private static extern void ts_query_cursor_remove_match(IntPtr cursor,uint id);
 
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool ts_query_cursor_next_capture(IntPtr cursor,out TSQueryMatch match,out uint capture_index);
 #endregion            
     }
@@ -1102,7 +1118,7 @@ namespace TypeScriptParser.TreeSitter
         * 2. The type of error is written to the `error_type` parameter.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr ts_query_new(IntPtr language, [MarshalAs(UnmanagedType.LPStr)] string source, uint source_len, out uint error_offset, out TSQueryError error_type);
+        private static extern IntPtr ts_query_new(IntPtr language, [MarshalAs(UnmanagedType.LPUTF8Str)] string source, uint source_len, out uint error_offset, out TSQueryError error_type);
 
         /**
         * Get the number of distinct node types in the language.
@@ -1120,7 +1136,7 @@ namespace TypeScriptParser.TreeSitter
         * Get the numerical id for the given node type string.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
-        private static extern ushort ts_language_symbol_for_name(IntPtr language, [MarshalAs(UnmanagedType.LPStr)] string str, uint length, bool is_named);
+        private static extern ushort ts_language_symbol_for_name(IntPtr language, [MarshalAs(UnmanagedType.LPUTF8Str)] string str, uint length, [MarshalAs(UnmanagedType.I1)] bool is_named);
 
         /**
         * Get the number of distinct field names in the language.
@@ -1138,7 +1154,7 @@ namespace TypeScriptParser.TreeSitter
         * Get the numerical id for the given field name string.
         */
         [DllImport("tree-sitter", CallingConvention = CallingConvention.Cdecl)]
-        private static extern ushort ts_language_field_id_for_name(IntPtr language, [MarshalAs(UnmanagedType.LPStr)] string str, uint length);
+        private static extern ushort ts_language_field_id_for_name(IntPtr language, [MarshalAs(UnmanagedType.LPUTF8Str)] string str, uint length);
 
         /**
         * Check whether the given node type id belongs to named nodes, anonymous nodes,

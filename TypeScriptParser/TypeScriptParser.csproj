@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <PackageId>TypeScriptParser</PackageId>
     <Description>TypeScript语法解析器 - 基于Tree-sitter的.NET绑定</Description>
     <PackageTags>tree-sitter;typescript;parser;syntax;ast;native</PackageTags>
