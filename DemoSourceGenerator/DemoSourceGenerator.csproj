@@ -24,8 +24,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../TypeScriptParser/TypeScriptParser.csproj" />
+    <!-- <ProjectReference Include="../TypeScriptParser/TypeScriptParser.csproj" />
+    <TargetPathWithTargetPlatformMoniker Include="../TypeScriptParser/bin/Debug/netstandard2.1/TypeScriptParser.dll" IncludeRuntimeDependency="false" /> -->
+
+    <PackageReference Include="TypeScriptParser" Version="0.0.1-dev" />
     <TargetPathWithTargetPlatformMoniker Include="../TypeScriptParser/bin/Debug/netstandard2.1/TypeScriptParser.dll" IncludeRuntimeDependency="false" />
+
+    <!-- <PackageReference Include="TypeScriptParser" Version="0.2.8.31" IncludeAssets="all" GeneratePathProperty="true" />
+    <TargetPathWithTargetPlatformMoniker Include="$(PkgTypeScriptParser)\lib\netstandard2.1\TypeScriptParser.dll" IncludeRuntimeDependency="false" /> -->
   </ItemGroup>
 
 </Project>
