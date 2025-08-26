@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>DemoSourceGenerator</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Title>Demo Source Generator</Title>
+    <Description>一个空的demo源生成器项目</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" PrivateAssets="all" />
+    <PackageReference Include="TypeScriptParser" Version="0.0.1-dev" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../TypeScriptParser/TypeScriptParser.csproj" />
+    <TargetPathWithTargetPlatformMoniker Include="../TypeScriptParser/bin/Debug/netstandard2.1/TypeScriptParser.dll" IncludeRuntimeDependency="false" />
+  </ItemGroup>
+
+</Project>

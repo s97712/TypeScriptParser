@@ -21,4 +21,7 @@
     <Content Include="buildTransitive/**/*" Pack="true" PackagePath="buildTransitive/" />
   </ItemGroup>
 
+  <!-- 导入 TypeScriptParser.targets 以获取 TypeScriptParserNativePath 元数据 -->
+  <Import Project="build/TypeScriptParser.targets" />
+
 </Project>

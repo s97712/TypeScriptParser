@@ -18,13 +18,13 @@
     <TypeScriptParserNativeFiles Include="$(TypeScriptParserNativePath)**/*" />
   </ItemGroup>
 
-  <!-- 源生成器项目：使用AdditionalFiles方式 -->
+  <!-- 源生成器项目：导出TypeScriptParserNativePath变量 -->
   <ItemGroup>
-    <AdditionalFiles Include="@(TypeScriptParserNativeFiles)" />
+    <AssemblyMetadata Include="TypeScriptParserNativePath" Value="$(TypeScriptParserNativePath)" />
   </ItemGroup>
 
   <!-- 常规项目：复制到输出目录 -->
-  <ItemGroup Condition="'$(IsSourceGenerator)' != 'true' AND '@(TypeScriptParserNativeFiles)' != ''">
+  <ItemGroup Condition="'@(TypeScriptParserNativeFiles)' != ''">
     <None Include="@(TypeScriptParserNativeFiles)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 

@@ -33,9 +33,8 @@ dotnet test --configuration Release
 dotnet pack -c Release  -o ./artifacts
 
 # 5. 测试打包
-dotnet package add  TypeScriptParser --project TypeScriptParser.TestPackage/ --version 0.0.1-dev
-dotnet test TypeScriptParser.TestPackage
-```
+dotnet package add  TypeScriptParser --version 0.0.1-dev --project your_project
+dotnet test  --project your_project
 
 ## 项目结构
 
