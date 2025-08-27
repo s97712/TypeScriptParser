@@ -1,8 +1,5 @@
 <Project>
 
-  <!-- 导入属性定义 -->
-  <Import Project="TypeScriptParser.props" />
-
   <!-- 收集native库文件 -->
   <ItemGroup Condition="Exists('$(TypeScriptParserNativePath)')">
     <TypeScriptParserNativeFiles Include="$(TypeScriptParserNativePath)**/*" />
