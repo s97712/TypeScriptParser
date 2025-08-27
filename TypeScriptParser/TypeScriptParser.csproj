@@ -5,7 +5,6 @@
     <PackageId>TypeScriptParser</PackageId>
     <Description>TypeScript语法解析器 - 基于Tree-sitter的.NET绑定</Description>
     <PackageTags>tree-sitter;typescript;parser;syntax;ast;native</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NoWarn>$(NoWarn);NU5128;CS1591</NoWarn>
   </PropertyGroup>
 
@@ -19,6 +18,14 @@
     <Content Include="runtimes/**/*" Pack="true" PackagePath="runtimes/" />
     <Content Include="build/**/*" Pack="true" PackagePath="build/" />
     <Content Include="buildTransitive/**/*" Pack="true" PackagePath="buildTransitive/" />
+  </ItemGroup>
+
+  <!-- 导入构建属性 -->
+  <Import Project="build/TypeScriptParser.props" />
+
+  <!-- 使用统一的路径计算逻辑设置元数据 -->
+  <ItemGroup>
+    <AssemblyMetadata Include="TypeScriptParserNativePath" Value="$(TypeScriptParserNativePath)" />
   </ItemGroup>
 
 </Project>

@@ -1,26 +1,11 @@
 <Project>
 
-  <!-- 自动检测运行时标识符 -->
-  <PropertyGroup>
-    <TypeScriptParserRuntimeIdentifier Condition="'$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</TypeScriptParserRuntimeIdentifier>
-    <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('Windows'))">win-x64</TypeScriptParserRuntimeIdentifier>
-    <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('Linux'))">linux-x64</TypeScriptParserRuntimeIdentifier>
-    <TypeScriptParserRuntimeIdentifier Condition="'$(TypeScriptParserRuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('OSX'))">osx-arm64</TypeScriptParserRuntimeIdentifier>
-    
-    <TypeScriptParserNativePath>$(MSBuildThisFileDirectory)../runtimes/$(TypeScriptParserRuntimeIdentifier)/native/</TypeScriptParserNativePath>
-    
-    <!-- 检测是否为源生成器项目 -->
-    <IsSourceGenerator Condition="'$(OutputType)' == 'Library' AND '$(IncludeBuildOutput)' == 'false'">true</IsSourceGenerator>
-  </PropertyGroup>
+  <!-- 导入属性定义 -->
+  <Import Project="TypeScriptParser.props" />
 
   <!-- 收集native库文件 -->
   <ItemGroup Condition="Exists('$(TypeScriptParserNativePath)')">
     <TypeScriptParserNativeFiles Include="$(TypeScriptParserNativePath)**/*" />
-  </ItemGroup>
-
-  <!-- 源生成器项目：导出TypeScriptParserNativePath变量 -->
-  <ItemGroup>
-    <AssemblyMetadata Include="TypeScriptParserNativePath" Value="$(TypeScriptParserNativePath)" />
   </ItemGroup>
 
   <!-- 常规项目：复制到输出目录 -->
@@ -29,7 +14,7 @@
   </ItemGroup>
 
   <!-- 发布时包含native库文件（非源生成器项目） -->
-  <ItemGroup Condition="'$(IsSourceGenerator)' != 'true' AND '$(PublishDir)' != '' AND '@(TypeScriptParserNativeFiles)' != ''">
+  <ItemGroup Condition="'$(PublishDir)' != '' AND '@(TypeScriptParserNativeFiles)' != ''">
     <ResolvedFileToPublish Include="@(TypeScriptParserNativeFiles)">
       <RelativePath>%(Filename)%(Extension)</RelativePath>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
