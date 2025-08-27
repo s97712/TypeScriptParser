@@ -13,6 +13,10 @@
     <None Include="@(TypeScriptParserNativeFiles)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AssemblyMetadata Include="TypeScriptParserNativePath" Value="$(TypeScriptParserNativePath)" />
+  </ItemGroup>
+
   <!-- 发布时包含native库文件（非源生成器项目） -->
   <ItemGroup Condition="'$(PublishDir)' != '' AND '@(TypeScriptParserNativeFiles)' != ''">
     <ResolvedFileToPublish Include="@(TypeScriptParserNativeFiles)">
